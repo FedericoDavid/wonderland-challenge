@@ -1,4 +1,3 @@
-// app/_config/wagmi.ts
 import { defaultWagmiConfig } from "@web3modal/wagmi";
 import { sepolia, polygonMumbai } from "viem/chains";
 
