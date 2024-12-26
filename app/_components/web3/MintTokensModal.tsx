@@ -9,8 +9,7 @@ import { sepolia } from "viem/chains";
 
 import { useTokenBalance } from "@/app/_hooks/useTokenBalance";
 import { SEPOLIA_CONTRACTS, POLYGON_CONTRACTS } from "../../_config/wagmi";
-import { daiAbi } from "@/app/_services/sepolia/dai/abi";
-import { usdcAbi } from "@/app/_services/sepolia/usdc/abi";
+import { getTokenAbi } from "@/app/_utils/getTokenAbi";
 
 interface TokensModalProps {
   isOpen: boolean;
@@ -44,14 +43,14 @@ export function TokensModal({ isOpen, onClose, openedFrom }: TokensModalProps) {
 
   const handleMint = (
     tokenAddress: string,
-    symbol: string,
-    decimals: number,
-    abi: typeof daiAbi | typeof usdcAbi
+    symbol: "DAI" | "USDC",
+    decimals: number
   ) => {
     if (!address) return;
 
     try {
       const amount = parseUnits("10", decimals);
+      const abi = getTokenAbi(chainId, symbol);
 
       toast.info(`Please confirm ${symbol} mint transaction...`);
 
@@ -122,8 +121,7 @@ export function TokensModal({ isOpen, onClose, openedFrom }: TokensModalProps) {
                         handleMint(
                           contracts.DAI.address,
                           "DAI",
-                          contracts.DAI.decimals,
-                          daiAbi
+                          contracts.DAI.decimals
                         )
                       }
                       disabled={isPending}
@@ -141,8 +139,7 @@ export function TokensModal({ isOpen, onClose, openedFrom }: TokensModalProps) {
                         handleMint(
                           contracts.USDC.address,
                           "USDC",
-                          contracts.USDC.decimals,
-                          usdcAbi
+                          contracts.USDC.decimals
                         )
                       }
                       disabled={isPending}

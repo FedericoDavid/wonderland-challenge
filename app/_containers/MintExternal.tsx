@@ -11,8 +11,7 @@ import { Button } from "../_components/common/Button";
 import { TokenAmountInput } from "../_components/web3/TokenAmountInput";
 
 import { POLYGON_CONTRACTS, SEPOLIA_CONTRACTS } from "../_config/wagmi";
-import { daiAbi } from "@/app/_services/sepolia/dai/abi";
-import { usdcAbi } from "@/app/_services/sepolia/usdc/abi";
+import { getTokenAbi } from "../_utils/getTokenAbi";
 
 export function MintExternal() {
   const [amount, setAmount] = useState("");
@@ -43,18 +42,11 @@ export function MintExternal() {
     if (!address || !recipientAddress || !amount) return;
 
     try {
-      const token =
-        selectedToken === "DAI"
-          ? {
-              address: contracts.DAI.address,
-              decimals: contracts.DAI.decimals,
-              abi: daiAbi,
-            }
-          : {
-              address: contracts.USDC.address,
-              decimals: contracts.USDC.decimals,
-              abi: usdcAbi,
-            };
+      const token = {
+        address: contracts[selectedToken].address,
+        decimals: contracts[selectedToken].decimals,
+        abi: getTokenAbi(chainId, selectedToken),
+      };
 
       const parsedAmount = parseUnits(amount, token.decimals);
 
