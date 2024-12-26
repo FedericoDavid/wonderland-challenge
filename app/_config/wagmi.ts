@@ -18,6 +18,19 @@ export const SEPOLIA_CONTRACTS = {
   },
 } as const;
 
+export const POLYGON_CONTRACTS = {
+  DAI: {
+    address: "0xC5015b9d9161Dca7e18e32f6f25C4aD850731Fd4" as const,
+    decimals: 18,
+    symbol: "DAI",
+  },
+  USDC: {
+    address: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359" as const,
+    decimals: 6,
+    symbol: "USDC",
+  },
+} as const;
+
 export const config = defaultWagmiConfig({
   projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
   chains: [sepolia, polygonAmoy],

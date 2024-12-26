@@ -50,11 +50,9 @@ export function TokenAmountInput({
 
   return (
     <div className="space-y-2">
-      <div className="flex justify-between">
-        <label className="block text-sm font-medium text-gray-700">
-          Amount ({symbol})
-        </label>
-        <span className="text-sm text-gray-500">
+      <div className="flex justify-between text-gray-300">
+        <label className="text-sm font-medium">Amount ({symbol})</label>
+        <span className="text-sm opacity-75">
           Balance: {balance} {symbol}
         </span>
       </div>
@@ -64,19 +62,22 @@ export function TokenAmountInput({
           placeholder="0.0"
           value={currentAmount}
           disabled={disabled}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+          className="w-full px-4 py-3 bg-black/20 border border-gray-700 rounded-lg 
+                 text-white placeholder-gray-500 focus:outline-none focus:ring-2 
+                 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
           onChange={(e) => handleAmountChange(e.target.value)}
         />
         <button
           onClick={() => handleAmountChange(balance)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-blue-500 hover:text-blue-600"
-          type="button"
           disabled={disabled}
+          className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm
+                 text-blue-400 hover:text-blue-300 disabled:opacity-50 
+                 transition-colors duration-200"
         >
           MAX
         </button>
       </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-red-400 text-sm">{error}</p>}
     </div>
   );
 }

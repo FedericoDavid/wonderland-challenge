@@ -1,13 +1,13 @@
 "use client";
-
 import { Fragment } from "react";
 import { toast } from "react-toastify";
 import { Dialog, Transition } from "@headlessui/react";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount, useWriteContract, useChainId } from "wagmi";
 import { parseUnits } from "viem";
+import { sepolia } from "viem/chains";
 
 import { useTokenBalance } from "@/app/_hooks/useTokenBalance";
-import { SEPOLIA_CONTRACTS } from "../../_config/wagmi";
+import { SEPOLIA_CONTRACTS, POLYGON_CONTRACTS } from "../../_config/wagmi";
 import { daiAbi } from "@/app/_services/sepolia/dai/abi";
 import { usdcAbi } from "@/app/_services/sepolia/usdc/abi";
 
@@ -18,8 +18,12 @@ interface TokensModalProps {
 }
 
 export function TokensModal({ isOpen, onClose, openedFrom }: TokensModalProps) {
+  const chainId = useChainId();
+  const contracts =
+    chainId === sepolia.id ? SEPOLIA_CONTRACTS : POLYGON_CONTRACTS;
   const { address } = useAccount();
   const { dai, usdc } = useTokenBalance(address);
+
   const { writeContract: mint, isPending } = useWriteContract({
     mutation: {
       onSuccess: (hash) => {
@@ -115,9 +119,9 @@ export function TokensModal({ isOpen, onClose, openedFrom }: TokensModalProps) {
                     <button
                       onClick={() =>
                         handleMint(
-                          SEPOLIA_CONTRACTS.DAI.address,
+                          contracts.DAI.address,
                           "DAI",
-                          SEPOLIA_CONTRACTS.DAI.decimals,
+                          contracts.DAI.decimals,
                           daiAbi
                         )
                       }
@@ -134,9 +138,9 @@ export function TokensModal({ isOpen, onClose, openedFrom }: TokensModalProps) {
                     <button
                       onClick={() =>
                         handleMint(
-                          SEPOLIA_CONTRACTS.USDC.address,
+                          contracts.USDC.address,
                           "USDC",
-                          SEPOLIA_CONTRACTS.USDC.decimals,
+                          contracts.USDC.decimals,
                           usdcAbi
                         )
                       }
