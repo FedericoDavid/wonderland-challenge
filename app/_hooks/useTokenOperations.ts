@@ -27,7 +27,7 @@ export function useTokenOperations(
     useWriteContract({
       mutation: {
         onSuccess: () => {
-          toast.success("Transfer completed successfully! 👌");
+          toast.success("Transfer process started successfully! 👌");
         },
         onError: (error) => {
           toast.error(`Failed to transfer token: ${error.message}`);

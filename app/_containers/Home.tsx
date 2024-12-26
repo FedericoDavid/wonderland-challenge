@@ -1,48 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAccount } from "wagmi";
-
 import { Layout } from "../_components/Layout";
-import { TokenOperations } from "../_components/web3/TokenOperations";
+import { Tabs } from "../_components/common/Tabs";
+import { Deposit } from "./Deposit";
+import { TokenTransfer } from "./TokenTransfer";
+import { MintExternal } from "./MintExternal";
 import { TokensModal } from "../_components/web3/MintTokensModal";
 
-import { useTokenBalance } from "../_hooks/useTokenBalance";
+const tabs = [
+  { id: "deposit", label: "Deposit" },
+  { id: "transfer", label: "Transfer" },
+  { id: "mint", label: "Mint", isNew: true },
+];
 
-const Home: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [hasCheckedBalances, setHasCheckedBalances] = useState<boolean>(false);
+export default function Home() {
+  const [activeTab, setActiveTab] = useState("transfer");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalOpenedFrom, setModalOpenedFrom] = useState<"auto" | "button">(
     "auto"
   );
-
-  const { isConnected, address } = useAccount();
-  const { dai, usdc, chainId } = useTokenBalance(address);
-
-  useEffect(() => {
-    if (
-      isConnected &&
-      address &&
-      !dai.loading &&
-      !usdc.loading &&
-      !hasCheckedBalances
-    ) {
-      const daiAmount = BigInt(dai.raw?.toString() || "0");
-      const usdcAmount = BigInt(usdc.raw?.toString() || "0");
-
-      const needsTokens = daiAmount === BigInt(0) && usdcAmount === BigInt(0);
-
-      if (needsTokens) {
-        setIsModalOpen(true);
-      }
-
-      setHasCheckedBalances(true);
-    }
-  }, [isConnected, address, dai.loading, usdc.loading, hasCheckedBalances]);
-
-  useEffect(() => {
-    setHasCheckedBalances(false);
-  }, [chainId]);
+  const { isConnected } = useAccount();
 
   const handleOpenModal = () => {
     setModalOpenedFrom("button");
@@ -51,25 +30,38 @@ const Home: React.FC = () => {
 
   return (
     <Layout onOpenTokenModal={handleOpenModal}>
-      {isConnected && (
+      {isConnected ? (
         <div className="space-y-6">
-          {!hasCheckedBalances ? (
-            <div className="flex items-center justify-center p-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-            </div>
-          ) : (
-            <TokenOperations />
+          <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+          {activeTab === "deposit" && <Deposit />}
+          {activeTab === "transfer" && (
+            <TokenTransfer
+              onNeedTokens={() => {
+                setModalOpenedFrom("auto");
+                setIsModalOpen(true);
+              }}
+            />
           )}
+          {activeTab === "mint" && <MintExternal />}
 
-          <TokensModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            openedFrom={modalOpenedFrom}
-          />
+          {isModalOpen && (
+            <TokensModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              openedFrom={modalOpenedFrom}
+            />
+          )}
+        </div>
+      ) : (
+        <div className="bg-[#1a1b2e]/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-6 shadow-xl">
+          <div className="flex flex-col items-center justify-center text-center py-12">
+            <h2 className="text-2xl font-bold text-white mb-4">Welcome!</h2>
+            <p className="text-gray-400 max-w-md">
+              Connect your wallet to start interacting with the application.
+            </p>
+          </div>
         </div>
       )}
     </Layout>
   );
-};
-
-export default Home;
+}
