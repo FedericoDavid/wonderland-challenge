@@ -1,12 +1,17 @@
+import { useAccount } from "wagmi";
+
 import { WalletConnect } from "./web3/WalletConnect";
+import { Button } from "./common/Button";
 
 interface NavbarProps {
   onOpenTokenModal: () => void;
 }
 
 export function Navbar({ onOpenTokenModal }: NavbarProps) {
+  const { isConnected } = useAccount();
+
   return (
-    <nav className="flex items-center justify-between mb-8">
+    <nav className="flex items-center justify-between mb-10">
       <div className="flex-1" />
 
       <div className="flex-1 flex flex-col justify-center items-center">
@@ -15,12 +20,11 @@ export function Navbar({ onOpenTokenModal }: NavbarProps) {
       </div>
 
       <div className="flex-1 flex justify-end items-center gap-4">
-        <button
-          onClick={() => onOpenTokenModal()}
-          className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-        >
-          No Tokens?
-        </button>
+        {isConnected && (
+          <Button onClick={onOpenTokenModal} variant="secondary">
+            No Tokens?
+          </Button>
+        )}
         <WalletConnect />
       </div>
     </nav>

@@ -8,7 +8,6 @@ import { Button } from "../common/Button";
 
 export function WalletConnect() {
   const [mounted, setMounted] = useState(false);
-
   const { address, isConnected } = useAccount();
   const { open } = useWeb3Modal();
 
@@ -16,10 +15,12 @@ export function WalletConnect() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <Button>Loading...</Button>;
+  if (!mounted) {
+    return <Button variant="primary" isLoading />;
+  }
 
   return (
-    <Button onClick={() => open({ view: "Connect" })}>
+    <Button variant="primary" onClick={() => open({ view: "Connect" })}>
       {isConnected && address
         ? `${address.slice(0, 6)}...${address.slice(-4)}`
         : "Connect Wallet"}
