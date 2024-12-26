@@ -1,21 +1,9 @@
 import { defaultWagmiConfig } from "@web3modal/wagmi";
-import { sepolia, polygonMumbai } from "viem/chains";
+import { sepolia, polygonAmoy } from "viem/chains";
 
 if (!process.env.NEXT_PUBLIC_WC_PROJECT_ID) {
   throw new Error("NEXT_PUBLIC_WC_PROJECT_ID is required");
 }
-
-const mumbaiChain = {
-  ...polygonMumbai,
-  rpcUrls: {
-    default: {
-      http: ["https://polygon-mumbai.gateway.tenderly.co"],
-    },
-    public: {
-      http: ["https://polygon-mumbai.gateway.tenderly.co"],
-    },
-  },
-};
 
 export const SEPOLIA_CONTRACTS = {
   DAI: {
@@ -32,7 +20,7 @@ export const SEPOLIA_CONTRACTS = {
 
 export const config = defaultWagmiConfig({
   projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
-  chains: [sepolia, mumbaiChain],
+  chains: [sepolia, polygonAmoy],
   metadata: {
     name: "Web3 Challenge",
     description: "Web3 Challenge with Token Integration",

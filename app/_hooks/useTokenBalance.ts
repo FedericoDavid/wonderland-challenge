@@ -1,7 +1,7 @@
 "use client";
 
 import { useReadContract } from "wagmi";
-import { erc20Abi } from "viem";
+import { erc20Abi, zeroAddress } from "viem";
 import { SEPOLIA_CONTRACTS } from "../_config/wagmi";
 import { formatUnits } from "viem";
 
@@ -10,14 +10,16 @@ export function useTokenBalance(address: string | undefined) {
     address: SEPOLIA_CONTRACTS.DAI.address,
     abi: erc20Abi,
     functionName: "balanceOf",
-    args: [address as `0x${string}`],
+    args: address ? [address as typeof zeroAddress] : undefined,
+    account: address as typeof zeroAddress,
   });
 
   const { data: usdcBalance, isLoading: isUsdcLoading } = useReadContract({
     address: SEPOLIA_CONTRACTS.USDC.address,
     abi: erc20Abi,
     functionName: "balanceOf",
-    args: [address as `0x${string}`],
+    args: address ? [address as typeof zeroAddress] : undefined,
+    account: address as typeof zeroAddress,
   });
 
   return {
