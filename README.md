@@ -1,6 +1,6 @@
-This is the Wonderland web3 Challenge
+### This is the Wonderland web3 Challenge 🚀
 
-Project created with tailwind, wagmi v2, web3modal & typescript
+- Project created with tailwind, wagmi v2, web3modal & typescript
 
 ## Getting Started
 
